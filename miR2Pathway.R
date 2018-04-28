@@ -316,7 +316,7 @@ miR2Pathway <- function(mydata.gene,mydata.miR,genelist,name.genelist,miRlist,mi
         loc.miR[i]<-which(miRlist.full==names(miR.left[i]))
       }
       
-      for (x in c(loc.miR)){ ##The numebr of left miRNAs
+      for (x in c(loc.miR)){ ##The number of left miRNAs
         
         amiRPath.tumor[[1]][[x]]<- induced.subgraph(miRPath.tumor.stat,c(miRlist.full[x],names(V(KEGG.g2)))) ##names(miR.left) is full name.
         
@@ -343,7 +343,6 @@ miR2Pathway <- function(mydata.gene,mydata.miR,genelist,name.genelist,miRlist,mi
     
     KEGG.p0 <-Pathway.database[[y]]      
     KEGG.p <- convertIdentifiers(KEGG.p0, "entrez") 
-    title.pathway <- KEGG.p0@title
     KEGG.g<-pathwayGraph(KEGG.p) 
     KEGG.g1<-igraph.from.graphNEL(KEGG.g) 
     KEGG.g2<-graph_from_edgelist(get.edgelist(KEGG.g1),direct=FALSE)
@@ -381,7 +380,6 @@ miR2Pathway <- function(mydata.gene,mydata.miR,genelist,name.genelist,miRlist,mi
     }
     return(PR.miR.sum)
   }
-  return(title.pathway)
   
   
   dim(result3)=c(N.miR,N.path)
@@ -394,6 +392,13 @@ miR2Pathway <- function(mydata.gene,mydata.miR,genelist,name.genelist,miRlist,mi
 	
   
 }  
+
+for (xt in 1:length(Pathway.database)) {
+  p0 <-Pathway.database[[xt]]
+  title.pathway[xt] <- p0@title
+}
+
+
 write.table(sprintf("%.05f",cor.tumor), "P_values.txt", sep=",", quote=F)
 write.table(title.pathway, "Pathways.txt", sep=",", quote=F)
 Full_Results <- list(Pathways=title.pathway, P.Values=sprintf("%.05f",cor.tumor))
